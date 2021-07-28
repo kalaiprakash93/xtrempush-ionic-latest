@@ -65,9 +65,6 @@ XtremePush.prototype.hitTag = function(tag, value) {
    }
 };
 
-XtremePush.prototype.registerWithToken = function(token) {
-   return exec(null, null, 'XtremePush', 'registerWithToken', [token]);
-};
 
 /**
  * Calling hit impression function

@@ -58,7 +58,10 @@
  */
 + (void)setInAppMessageEnabled:(BOOL)enabled;
 
-
+/**
+* Turn on to make XPush not register for push notification and request permissions from user
+*/
++ (void)enableManualPushRegistration: (BOOL) enabled;
 
 /** LOCATIONS CONFIGURATION **/
 
@@ -101,6 +104,18 @@
  */
 + (void) setDeliveryReceiptsEnabled:(BOOL) isEnabled
             customReportingEndpoint:(NSString*) endpoint;
+
+/*
+ * XPush will use encryption for push notifiction
+ * you must use Push service extension and AppGroups to use encrypted pushes
+ */
++ (void) enableEncryptedPush;
+
+/*
+ * @param appGroup -- name of the App Group you defined for your bundle identifier
+ * Required for using delivery receipts or encrypted push notifications
+ */
++ (void) enableAppGroups: (NSString*) appGroup;
 
 /** DELEGATE BRIDGES **/
 
@@ -425,6 +440,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
  */
 + (void)markPushAsRead:(NSString *)actionId;
 
++ (void)setCordovaLaunchMode:(BOOL) enable;
 
 /**
  *  User setting

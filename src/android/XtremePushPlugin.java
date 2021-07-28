@@ -339,10 +339,10 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         
         String tag =  data.getString(0);
         
-        if (!data.isNull(1)){
+        if (!data.isNull(1) && mPushConnector != null){
             mPushConnector.hitTag(tag, data.getString(1));
         }
-        else {
+        else if (mPushConnector != null){
             mPushConnector.hitTag(tag);
         }
     }
@@ -363,7 +363,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         if (!data.isNull(1)) {
             message = data.getString(1);
         }
-        
+        if (mPushConnector != null)
         mPushConnector.hitEvent(getApplicationContext(), title, message);
     }
 
@@ -377,11 +377,9 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
             LogEventsUtils.sendLogTextMessage(TAG, "setUser: Please provide user ID");
             return;
         }
-        
+        if (mPushConnector != null)
         mPushConnector.setUser(data.getString(0));
-    }
 
-    private void registerWithToken(JSONArray data) throws JSONException {
 
     }
 
@@ -395,7 +393,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
             LogEventsUtils.sendLogTextMessage(TAG, "setTempUser: Please provide temp user ID");
             return;
         }
-        
+        if (mPushConnector != null)
         mPushConnector.setTempUser(data.getString(0));
     }
     
@@ -411,7 +409,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         }
         
         String impression =  data.getString(0);
-        
+        if (mPushConnector != null)
         mPushConnector.hitImpression(impression);
     }
     
@@ -421,6 +419,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
             LogEventsUtils.sendLogTextMessage(TAG, "sendTags: Please call register function first");
             return;
         }
+        if (mPushConnector != null)
         mPushConnector.sendTags();
     }
     
@@ -430,6 +429,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
             LogEventsUtils.sendLogTextMessage(TAG, "sendImpressions: Please call register function first");
             return;
         }
+        if (mPushConnector != null)
         mPushConnector.sendImpressions();
     }
     
@@ -445,7 +445,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         }
         
         String id =  data.getString(0);
-        
+        if (mPushConnector != null)
         mPushConnector.setExternalId(id);
     }
     
@@ -468,6 +468,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
             return;
         }
         cordova.setActivityResultCallback(this);
+        if (mPushConnector != null)
         mPushConnector.openInbox(getApplicationActivity());
     }
     
@@ -477,6 +478,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
             LogEventsUtils.sendLogTextMessage(TAG, "openInbox: Please call register function first");
             return;
         }
+        if (mPushConnector != null)
         inboxBadgeUpdated(mPushConnector.getInboxBadge(), null);
     }
     
@@ -507,15 +509,17 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
             LogEventsUtils.sendLogTextMessage(TAG, "getDeviceInfo: Please call register function first");
             callbackContext.error("Please call register function first");
         }
-        
+        if (mPushConnector != null) {
         HashMap<String, String> deviceInfo = mPushConnector.getDeviceInfo(getApplicationContext());
         
         JSONObject devInfo = new JSONObject(deviceInfo);
         
         callbackContext.success(devInfo);
+        }
     }
 
     private void requestLocationsPermissions() {
+        if (mPushConnector != null)
         mPushConnector.requestLocationPermissions(getApplicationActivity());
     }
 
@@ -689,7 +693,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
     private void initializePushConnector(){
         // mPushConnector.mLifecycleListener.onActivityCreated(getApplicationActivity(), null);
         // mPushConnector.mLifecycleListener.onActivityStarted(getApplicationActivity());
-        mPushConnector.mLifecycleListener.onActivityResumed(getApplicationActivity());
+        PushConnector.mLifecycleListener.onActivityResumed(getApplicationActivity());
         isInitialized = true;
     }
     
@@ -760,6 +764,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
     }
     
     private void onRotation(){
+        if(mPushConnector!= null)
         mPushConnector.onRotation(getApplicationActivity());
     }
     
@@ -824,11 +829,11 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
                     foregroundBool = false;
             }
             if (foregroundBool != null) {
-                if (foregroundBool) {
+                if (foregroundBool && mPushConnector != null) {
                     mPushConnector.showNotification(messagePayload);
                 }
             } else {
-                if (setShowForegroundNotifications) {
+                if (setShowForegroundNotifications && mPushConnector != null) {
                     mPushConnector.showNotification(messagePayload);
                 }
             }
@@ -887,7 +892,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         if(!data.isNull(1)){
             action = data.getString(1);
         }
-        
+        if (mPushConnector != null)
         mPushConnector.reportMessageClicked(pushList.get(messageId), action);
     }
     
@@ -902,7 +907,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         }
         
         messageId = data.getString(0);
-        
+        if (mPushConnector != null)
         mPushConnector.reportMessageDismissed(pushList.get(messageId), null);
     }
     
@@ -921,7 +926,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         if(!data.isNull(1)){
             action = data.getString(1);
         }
-        
+        if (mPushConnector != null)
         mPushConnector.clickMessage(pushList.get(messageId), action);
     }
     
@@ -940,7 +945,7 @@ public class XtremePushPlugin extends CordovaPlugin implements InboxBadgeUpdateL
         if(!data.isNull(1)){
             action = data.getString(1);
         }
-        
+        if (mPushConnector != null)
         mPushConnector.showNotification(pushList.get(messageId));
     }
     
