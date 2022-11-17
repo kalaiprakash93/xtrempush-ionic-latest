@@ -87,16 +87,19 @@ static NSMutableDictionary *pushNotificationBackupList;
         
         id pushPermissionsRequest = [iosOptions objectForKey:@"pushPermissionsRequest"];
         if (pushPermissionsRequest != nil) requestNotificationPermissions = [pushPermissionsRequest boolValue];
-
+        
         bool enabledManualPush = [iosOptions[@"enableManualPushRegistration"] boolValue];
         if (enabledManualPush) {
             [XPush enableManualPushRegistration:YES];
         }
+        
     }
     [XPush setAsksForLocationPermissions:requestLocationPermissions];
+    
     if (requestNotificationPermissions) {
         [XPush registerForRemoteNotificationTypes:XPNotificationType_Alert | XPNotificationType_Sound | XPNotificationType_Badge];
     }
+        
     pushNotificationBackupList = [[NSMutableDictionary alloc] init];
     [self registerXpushConfiguration];
     [XPush setShouldProcessNotificationsFromLaunchOptions:YES];
@@ -114,6 +117,7 @@ static NSMutableDictionary *pushNotificationBackupList;
     }
     Storage.store.tempUserInfo = nil;
     Storage.store.identifier = nil;
+    
     [self successWithMessage:@"Successfully registered!" withCallbackId:command.callbackId];
 }
 
@@ -251,7 +255,6 @@ static NSMutableDictionary *pushNotificationBackupList;
     }];
 }
 
-
 - (void)hitEvent:(CDVInvokedUrlCommand *)command {
     [self.commandDelegate runInBackground:^{
         NSString *title = [command.arguments objectAtIndex:0];
@@ -360,7 +363,7 @@ static NSMutableDictionary *pushNotificationBackupList;
         if (![actionNotification isEqual:[NSNull null]]) {
             [XPush reportMessageClicked:x actionIdentifier:actionNotification];
         } else {
-            [XPush reportMessageClicked:x];
+            [XPush reportMessageClicked:x context:nil];
         }
     } else {
         NSLog(@"clickMessage - Invalid push notification with id = %@", idNotification);

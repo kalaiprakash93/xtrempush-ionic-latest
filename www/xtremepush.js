@@ -65,7 +65,6 @@ XtremePush.prototype.hitTag = function(tag, value) {
    }
 };
 
-
 /**
  * Calling hit impression function
  * @param  {String}   impression value which will be sent
