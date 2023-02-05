@@ -44,6 +44,7 @@ repositories{
 ext.postBuildExtras = {
     if (project.extensions.findByName('googleServices') == null) {
         apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+        com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
     }
 }
 
